@@ -1,0 +1,49 @@
+version: '3'
+
+services:
+  source_manager:
+    build:
+      context: ./source_manager
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    networks:
+      - flask-microservices
+
+  source_geocoder:
+    build:
+      context: ./source_geocoder
+      dockerfile: Dockerfile
+    ports:
+      - 5001:5001
+    depends_on:
+      - source_manager
+    networks:
+      - flask-microservices
+
+  emergency_storage:
+    build:
+      context: ./emergency_storage
+      dockerfile: Dockerfile
+    ports:
+      - 5002:5002
+    env_file:
+      - ./emergency_storage/.env
+    depends_on:
+      - source_geocoder
+    networks:
+      - flask-microservices
+
+  cron_service:
+    build:
+      context: ./cron_service
+      dockerfile: Dockerfile
+    depends_on:
+      - emergency_storage
+    networks:
+      - flask-microservices
+
+
+networks:
+  flask-microservices:
+    driver: bridge
