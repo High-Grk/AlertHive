@@ -19,7 +19,7 @@ ENV FLASK_RUN_HOST=0.0.0.0
 ENV FLASK_RUN_PORT=5001
 
 # Expose port
-EXPOSE 53001
+EXPOSE 5001
 
 # Set the entrypoint command
 CMD ["python", "app.py"]
